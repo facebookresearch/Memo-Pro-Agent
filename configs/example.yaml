@@ -1,0 +1,67 @@
+# One prepared subset, using one user-managed VLM endpoint for policy and gate.
+# Prepare data first; no video, index or model weight is bundled with this config.
+data:
+  root: data/prepared/propermem
+  uid_list: data/prepared/propermem/uids.txt
+  windows: data/prepared/propermem/windows.json
+memory:
+  root: data/prepared/memory
+  verify_hashes: true
+policy:
+  provider: openai_compat
+  model: qwen
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: PROPERAGENT_POLICY_KEY
+  rpm: 0
+  max_images_per_request: 32
+gate_backend:
+  provider: openai_compat
+  model: qwen
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: PROPERAGENT_GATE_KEY
+  rpm: 0
+judge_backend:
+  provider: openai_compat
+  model: gpt-4o
+  base_url: https://api.openai.com/v1
+  api_key_env: OPENAI_API_KEY
+  rpm: 60
+embedding:
+  provider: sentence_transformers
+  model_name: BAAI/bge-large-en-v1.5
+  signature_name: BAAI/bge-large-en-v1.5
+retrieval:
+  mode: slow
+  seed_threshold: 0.55
+  max_episodic: 60
+  max_semantic: 6
+  max_passages: 4
+  ppr_events: 5
+  passage_vector_topk: 2
+gate:
+  prompt_variant: version_free
+  max_tokens: 160
+  temperature: 0.0
+  strict_protocol: true
+policy_sampling:
+  observe_max_tokens: 48
+  answer_max_tokens: 160
+  temperature: 0.0
+windowed:
+  stride: 2.0
+  n_frames: 4
+  frame_gap: 1.0
+streaming:
+  stride: 1.0
+  chunk_turns: 30
+  keep_turns: 4
+judge:
+  n_frames: 4
+  frame_gap: 1.0
+  max_tokens: 400
+  max_in_window: 8
+  max_out_of_window: 5
+scoring:
+  grace_seconds: 2.0
+output:
+  root: runs

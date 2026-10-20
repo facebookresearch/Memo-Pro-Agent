@@ -1,0 +1,103 @@
+# ProPerAgent default configuration.
+#
+# Public harness defaults, not a complete paper-results reproduction recipe.
+# Override with `--set key.path=value`, or pass your own complete configuration
+# with `--config`. Data/index/model identities must be recorded separately.
+
+data:
+  root: data/propermem
+  # The evaluation set, one UID per line. Pinning this is what makes a reported
+  # `n` reproducible; without it the run takes whatever happens to be on disk.
+  uid_list: evalsets/eval800.txt
+  # Frozen trigger windows for that set. When given, these are authoritative and
+  # override trigger/<uid>.json -- the per-clip file is the dataset's own record,
+  # this is the scoring contract for a specific evaluation set.
+  windows: evalsets/eval800_windows.json
+
+memory:
+  root: data/memory
+  verify_hashes: false
+
+# The policy / generator. Any OpenAI-compatible endpoint works; a local vLLM
+# server is the usual choice for an open-weights model.
+#
+#   vllm serve Qwen/Qwen3-VL-30B-A3B-Instruct --port 8000 --limit-mm-per-prompt image=32
+policy:
+  provider: openai_compat
+  model: qwen
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: PROPERAGENT_POLICY_KEY
+  rpm: 0
+  max_images_per_request: 32
+
+# The gate. Served separately in the paper so it does not contend with the
+# policy for the same KV cache, but pointing both at one endpoint is fine.
+gate_backend:
+  provider: openai_compat
+  model: qwen
+  base_url: http://127.0.0.1:8002/v1
+  api_key_env: PROPERAGENT_GATE_KEY
+  rpm: 0
+
+# The content judge. A strong instruction-following model matters more here than
+# anywhere else: it defines the metric.
+judge_backend:
+  provider: openai_compat
+  model: gpt-4o
+  base_url: https://api.openai.com/v1
+  api_key_env: OPENAI_API_KEY
+  rpm: 60
+
+# Must be the same model that built the memory index. Mismatches are rejected at
+# load time via the manifest signature.
+embedding:
+  provider: sentence_transformers
+  model_name: BAAI/bge-large-en-v1.5
+  # Set model_name to a local directory to run without hub access, and keep
+  # signature_name as the canonical id so the memory manifest still matches.
+  signature_name: BAAI/bge-large-en-v1.5
+
+retrieval:
+  mode: slow            # `slow` adds personalized PageRank; `fast` is one-hop only
+  seed_threshold: 0.55
+  max_episodic: 60
+  max_semantic: 6
+  max_passages: 4
+  ppr_events: 5
+  passage_vector_topk: 2
+
+gate:
+  prompt_variant: version_free
+  max_tokens: 160
+  temperature: 0.0
+  strict_protocol: true
+
+policy_sampling:
+  observe_max_tokens: 48
+  answer_max_tokens: 160
+  temperature: 0.0
+
+windowed:
+  stride: 2.0
+  n_frames: 4
+  frame_gap: 1.0
+
+streaming:
+  stride: 1.0
+  chunk_turns: 30
+  keep_turns: 4
+
+judge:
+  n_frames: 4
+  frame_gap: 1.0
+  max_tokens: 400
+  max_in_window: 8
+  max_out_of_window: 5
+
+scoring:
+  # Seconds of tolerance after the window end before a fire counts as late.
+  # Inclusive, one-sided end + 2s convention; no tolerance before the start.
+  grace_seconds: 2.0
+
+output:
+  root: runs
