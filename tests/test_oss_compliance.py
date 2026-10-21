@@ -126,7 +126,7 @@ def test_security_reports_are_routed_privately():
 
 def test_readme_affiliations_and_local_logo_images():
     from html.parser import HTMLParser
-    from PIL import Image
+    from PIL import Image, ImageChops
 
     class ImageReferences(HTMLParser):
         def __init__(self):
@@ -151,11 +151,19 @@ def test_readme_affiliations_and_local_logo_images():
                            for name in ("meta", "msu", "uw", "uiuc")]
     for source, attrs in logos.items():
         assert attrs["alt"]
-        assert attrs["height"] == "26"
+        assert attrs["height"] == "48"
         assert attrs["align"] == "middle"
         assert readme.index(f'src="{source}"') < readme.index("# MemoProAgent")
         assert "width" not in attrs
         with Image.open(ROOT / source) as image:
             assert image.width > 0 and image.height > 0
             assert image.mode == "RGB"
+            bounds = ImageChops.difference(
+                image, Image.new("RGB", image.size, "white")
+            ).getbbox()
+            assert bounds is not None
+            left, top, right, bottom = bounds
+            assert left > 0 and top > 0
+            assert right < image.width and bottom < image.height
+        with Image.open(ROOT / source) as image:
             image.verify()
