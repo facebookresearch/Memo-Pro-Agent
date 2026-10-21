@@ -1,0 +1,83 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# SPDX-License-Identifier: CC-BY-NC-4.0
+
+# Qwen/VLM profile for a user-managed vLLM endpoint.
+# Requires a chat template supporting enable_thinking and a vLLM server supporting
+# stop-string preservation. Generic endpoint defaults remain in example.yaml.
+# This is an inference configuration example, not a paper checkpoint recipe.
+data:
+  root: data/prepared/propermem
+  uid_list: data/prepared/propermem/uids.txt
+  windows: data/prepared/propermem/windows.json
+memory:
+  root: data/prepared/memory
+  verify_hashes: true
+policy:
+  provider: openai_compat
+  model: qwen
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: MEMOPROAGENT_POLICY_KEY
+  rpm: 0
+  max_images_per_request: 32
+  extra_body:
+    chat_template_kwargs:
+      enable_thinking: false
+gate_backend:
+  provider: openai_compat
+  model: qwen
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: MEMOPROAGENT_GATE_KEY
+  rpm: 0
+  # The memory-build extractor uses this backend too.
+  extra_body:
+    chat_template_kwargs:
+      enable_thinking: false
+judge_backend:
+  provider: openai_compat
+  model: gpt-4o
+  base_url: https://api.openai.com/v1
+  api_key_env: OPENAI_API_KEY
+  rpm: 60
+embedding:
+  provider: sentence_transformers
+  model_name: BAAI/bge-large-en-v1.5
+  signature_name: BAAI/bge-large-en-v1.5
+retrieval:
+  mode: slow
+  seed_threshold: 0.55
+  max_episodic: 60
+  max_semantic: 6
+  max_passages: 4
+  ppr_events: 5
+  passage_vector_topk: 2
+gate:
+  prompt_variant: version_free
+  max_tokens: 160
+  temperature: 0.0
+  strict_protocol: true
+policy_sampling:
+  observe_max_tokens: 48
+  # Stop after a generated </observe> and retain the delimiter in the response.
+  # This does not force closure if generation reaches its token limit first.
+  observe_stop: true
+  answer_max_tokens: 160
+  temperature: 0.0
+windowed:
+  stride: 2.0
+  n_frames: 4
+  frame_gap: 1.0
+streaming:
+  stride: 1.0
+  frame_size: [384, 288]
+  chunk_turns: 30
+  keep_turns: 4
+judge:
+  n_frames: 4
+  frame_gap: 1.0
+  max_tokens: 400
+  max_in_window: 8
+  max_out_of_window: 5
+scoring:
+  grace_seconds: 2.0
+output:
+  root: runs

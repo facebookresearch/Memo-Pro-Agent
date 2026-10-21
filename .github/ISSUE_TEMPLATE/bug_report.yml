@@ -1,0 +1,60 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the CC-BY-NC-4.0 license found in the
+# LICENSE file in the root directory of this source tree.
+# SPDX-License-Identifier: CC-BY-NC-4.0
+
+name: Bug report
+description: Report a reproducible problem with MemoProAgent.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Do not upload private keys, credentials,
+        private personal memories, or restricted videos (including Ego4D
+        footage). Redact traces and logs before posting.
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Minimal commands, config, and dataset pin to reproduce.
+      placeholder: |
+        1. `python -m pip install -e '.[dev]'`
+        2. `python -m pytest -q tests/test_end_to_end.py`
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened, including error text (redacted).
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and config
+      description: OS, Python version, install extras, relevant config values.
+      placeholder: |
+        OS:
+        Python:
+        Install (`.[dev]`, `.[dev,ppr]`, ...):
+        Config overrides:
+    validations:
+      required: true
+  - type: textarea
+    id: traces
+    attributes:
+      label: Redacted traces
+      description: Paste redacted logs or stack traces. No secrets or private data.
+    validations:
+      required: false

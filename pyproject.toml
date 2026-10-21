@@ -1,0 +1,45 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# SPDX-License-Identifier: CC-BY-NC-4.0
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "memoproagent"
+version = "0.1.0"
+description = "MemoProAgent: a plug-and-play harness for memory-driven proactive assistance"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "CC-BY-NC-4.0" }
+
+dependencies = [
+    "numpy>=1.24",
+    "requests>=2.31",
+    "PyYAML>=6.0",
+    "opencv-python-headless>=4.8",
+    "Pillow>=10.0",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+# Personalized PageRank (the `slow` retrieval mode). Without it, retrieval still
+# runs in `fast` mode (one-hop episodic + semantic).
+ppr = ["python-igraph>=0.11"]
+# Local embedding backend. Not needed when embeddings are served over an
+# OpenAI-compatible /embeddings endpoint.
+embed = ["sentence-transformers>=2.6", "torch>=2.1"]
+# GRPO post-training.
+train = ["ms-swift>=3.0", "torch>=2.1", "peft>=0.10"]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+
+[project.scripts]
+memoproagent-build-memory = "memoproagent.cli.build_memory:main"
+memoproagent-run = "memoproagent.cli.run:main"
+
+[tool.setuptools.packages.find]
+include = ["memoproagent*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

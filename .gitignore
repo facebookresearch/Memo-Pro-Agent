@@ -1,0 +1,27 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.venv/
+.env
+.env.*
+build/
+dist/
+
+# Local data, weights, service logs and generated evaluation outputs.
+/data/
+/models/
+/checkpoints/
+/runs/
+/logs/
+*.mp4
+*.npy
+*.npz
+*.pt
+*.pth
+*.safetensors
+*.log
+
+# Optional local experiments are not part of this GPM release.
+baselines/
