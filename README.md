@@ -82,13 +82,14 @@ python tools/prepare_propermem.py --help
 ```
 
 Configure an OpenAI-compatible vision-language endpoint in `configs/example.yaml`.
-For Qwen served by vLLM, use `configs/qwen_vllm.yaml`: it explicitly disables
+For [Qwen3.8-27B](https://huggingface.co/Qwen/Qwen3.8-27B) served by vLLM,
+use `configs/qwen_vllm.yaml`: it explicitly disables
 thinking on policy and gate requests, including the gate-backed memory extractor,
 and enables `policy_sampling.observe_stop`. Both examples use the served model
 name `qwen` and one endpoint for policy and gate. A possible serving command is:
 
 ```bash
-vllm serve Qwen/Qwen3-VL-30B-A3B-Instruct --served-model-name qwen \
+vllm serve Qwen/Qwen3.8-27B --served-model-name qwen \
   --port 8000 --limit-mm-per-prompt '{"image":32}' \
   --default-chat-template-kwargs '{"enable_thinking":false}'
 ```
@@ -96,7 +97,8 @@ vllm serve Qwen/Qwen3-VL-30B-A3B-Instruct --served-model-name qwen \
 The JSON argument syntax was checked with vLLM 0.27.1. Confirm flag and
 `enable_thinking` chat-template support for your chosen model and serving version;
 other OpenAI-compatible services may not support these extensions. The generic
-configuration remains available for those services.
+configuration remains available for those services. `qwen` is the served-model
+alias used by the configuration, not the checkpoint name.
 
 `observe_stop` stops at a generated `</observe>` and preserves that delimiter.
 It does not force the model to generate a closing tag before the token limit,
@@ -104,9 +106,11 @@ and disabling thinking does not guarantee well-formed reason/answer output.
 A `<reason>` element belongs to the explicit inference protocol, not a hidden
 thinking trace. Do not count missing tags or an empty answer as valid silence.
 
-This is a configuration example, **not a paper checkpoint or a paper-results
-recipe**. Choose a model and serving setup that fit your hardware. The commands
-below use the Qwen/vLLM profile; substitute your configuration for other services.
+This serves the paper's base model, **not a post-trained checkpoint or a complete
+paper-results recipe**. Matching the base model alone does not reproduce the
+paper results. Choose a model and serving setup that fit your hardware. The
+commands below use the Qwen/vLLM profile; substitute your configuration for other
+services.
 
 Build the retrieval graph and embeddings **locally** from the prepared history.
 No prebuilt-index download is required. Construction uses the configured
@@ -174,15 +178,6 @@ server are supported.
 Slurm is optional. The [generic template](tools/slurm/run_gpm.sbatch) connects to
 already-running services and requires your own scheduler resources, environment
 and checkout path. It is not required for the Quick Start.
-
-## Migration From `properagent` (Historical Note)
-
-The software namespace was hard-renamed from `properagent` to `memoproagent`
-with no compatibility aliases: reinstall the package, update imports to
-`memoproagent`, use `memoproagent-run` / `memoproagent-build-memory`, and set
-`MEMOPROAGENT_POLICY_KEY` / `MEMOPROAGENT_GATE_KEY`. No data move is needed:
-the serialized schema (`properagent_memory_v1`) and `propermem/` layout are
-unchanged.
 
 ## Licensing
 
