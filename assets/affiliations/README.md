@@ -3,7 +3,9 @@
 These white-backed PNG wordmarks identify author affiliations in the main
 README. Colors and proportions are preserved; the artwork was rasterized or
 downscaled for display. White padding around each wordmark keeps its background
-from touching the artwork. The logos do not imply endorsement or approval.
+from touching the artwork. The full-width banner combines these same wordmarks
+on a continuous white background, ordered Meta, MSU, UW, then UIUC. The logos do
+not imply endorsement or approval.
 
 ## Sources
 

@@ -143,19 +143,22 @@ def test_readme_affiliations_and_local_logo_images():
     assert "<sup>6</sup> University of Illinois Urbana-Champaign" in readme
     parser = ImageReferences()
     parser.feed(readme)
-    logos = {item["src"]: item for item in parser.images
-             if item.get("src", "").startswith("assets/affiliations/")}
-    expected = {f"assets/affiliations/{name}.png" for name in ("msu", "meta", "uw", "uiuc")}
-    assert set(logos) == expected
-    assert list(logos) == [f"assets/affiliations/{name}.png"
-                           for name in ("meta", "msu", "uw", "uiuc")]
-    for source, attrs in logos.items():
-        assert attrs["alt"]
-        assert attrs["height"] == "48"
-        assert attrs["align"] == "middle"
-        assert readme.index(f'src="{source}"') < readme.index("# MemoProAgent")
-        assert "width" not in attrs
-        with Image.open(ROOT / source) as image:
+    banners = [item for item in parser.images
+               if item.get("src", "").startswith("assets/affiliations/")]
+    assert len(banners) == 1
+    attrs = banners[0]
+    source = "assets/affiliations/banner.png"
+    assert attrs["src"] == source
+    assert attrs["width"] == "100%"
+    assert "height" not in attrs
+    assert attrs["alt"] == (
+        "Meta, Michigan State University, University of Washington, "
+        "University of Illinois Urbana-Champaign"
+    )
+    assert readme.index(f'src="{source}"') < readme.index("# MemoProAgent")
+    logos = []
+    for name in ("meta", "msu", "uw", "uiuc"):
+        with Image.open(ROOT / f"assets/affiliations/{name}.png") as image:
             assert image.width > 0 and image.height > 0
             assert image.mode == "RGB"
             bounds = ImageChops.difference(
@@ -165,5 +168,19 @@ def test_readme_affiliations_and_local_logo_images():
             left, top, right, bottom = bounds
             assert left > 0 and top > 0
             assert right < image.width and bottom < image.height
-        with Image.open(ROOT / source) as image:
-            image.verify()
+            logos.append(image.resize(
+                (round(image.width * 96 / image.height), 96),
+                Image.Resampling.LANCZOS,
+            ))
+    with Image.open(ROOT / source) as banner:
+        assert banner.mode == "RGB"
+        assert banner.size == (1600, 160)
+        expected = Image.new("RGB", banner.size, "white")
+        x = (banner.width - sum(logo.width for logo in logos) - 80 * 3) // 2
+        assert x > 0
+        for logo in logos:
+            expected.paste(logo, (x, 32))
+            x += logo.width + 80
+        assert ImageChops.difference(banner, expected).getbbox() is None
+    with Image.open(ROOT / source) as image:
+        image.verify()
