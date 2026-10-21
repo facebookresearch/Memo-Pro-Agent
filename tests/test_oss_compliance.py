@@ -151,7 +151,9 @@ def test_readme_affiliations_and_local_logo_images():
                            for name in ("meta", "msu", "uw", "uiuc")]
     for source, attrs in logos.items():
         assert attrs["alt"]
-        assert attrs["height"] == "32"
+        assert attrs["height"] == "26"
+        assert attrs["align"] == "middle"
+        assert readme.index(f'src="{source}"') < readme.index("# MemoProAgent")
         assert "width" not in attrs
         with Image.open(ROOT / source) as image:
             assert image.width > 0 and image.height > 0

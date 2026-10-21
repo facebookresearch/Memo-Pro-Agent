@@ -1,5 +1,15 @@
 <div align="center">
 
+<p align="center">
+  <a href="https://about.meta.com"><img src="assets/affiliations/meta.png" alt="Meta" height="26" align="middle"></a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://msu.edu"><img src="assets/affiliations/msu.png" alt="Michigan State University" height="26" align="middle"></a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://www.washington.edu"><img src="assets/affiliations/uw.png" alt="University of Washington" height="26" align="middle"></a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://illinois.edu"><img src="assets/affiliations/uiuc.png" alt="University of Illinois Urbana-Champaign" height="26" align="middle"></a>
+</p>
+
 # MemoProAgent<br>Toward Memory-Driven Proactive Assistance
 
 **Shenglai Zeng**<sup>1,2</sup>, Xiao Yang<sup>2</sup>, Tiffany Ma<sup>2</sup>,
@@ -12,16 +22,6 @@ Jiliang Tang<sup>1</sup>, Wen-tau Yih<sup>3</sup>, Xin Luna Dong<sup>2</sup>
 <sup>1</sup> Michigan State University &nbsp; <sup>2</sup> Meta Reality Labs<br>
 <sup>3</sup> Meta Superintelligence Labs &nbsp; <sup>4</sup> Meta Recommendation Systems<br>
 <sup>5</sup> University of Washington &nbsp; <sup>6</sup> University of Illinois Urbana-Champaign
-
-<p align="center">
-  <a href="https://about.meta.com"><img src="assets/affiliations/meta.png" alt="Meta" height="32"></a>
-  &nbsp;&nbsp;
-  <a href="https://msu.edu"><img src="assets/affiliations/msu.png" alt="Michigan State University" height="32"></a>
-  &nbsp;&nbsp;
-  <a href="https://www.washington.edu"><img src="assets/affiliations/uw.png" alt="University of Washington" height="32"></a>
-  &nbsp;&nbsp;
-  <a href="https://illinois.edu"><img src="assets/affiliations/uiuc.png" alt="University of Illinois Urbana-Champaign" height="32"></a>
-</p>
 
 **A personal memory should help an assistant know when to speak, not just what to say.**
 
