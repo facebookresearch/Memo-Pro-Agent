@@ -1,9 +1,5 @@
 <div align="center">
 
-<p align="center">
-  <img src="assets/affiliations/banner.png" alt="Meta, Michigan State University, University of Washington, University of Illinois Urbana-Champaign" width="100%">
-</p>
-
 # MemoProAgent<br>Toward Memory-Driven Proactive Assistance
 
 **Shenglai Zeng**<sup>1,2</sup>, Xiao Yang<sup>2</sup>, Tiffany Ma<sup>2</sup>,
@@ -27,6 +23,10 @@ Jiliang Tang<sup>1</sup>, Wen-tau Yih<sup>3</sup>, Xin Luna Dong<sup>2</sup>
 [Citation](#citation)
 
 </div>
+
+<p align="center">
+  <img src="assets/affiliations/banner.png" alt="Meta, Michigan State University, University of Washington, University of Illinois Urbana-Champaign" width="100%">
+</p>
 
 <p align="center"><img src="assets/paper/introduction.png" alt="Introduction: reactive versus memory-driven proactive assistance, the importance of matching memory and timing, and the MemoProAgent framework" width="100%"></p>
 

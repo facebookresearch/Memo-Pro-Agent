@@ -155,7 +155,10 @@ def test_readme_affiliations_and_local_logo_images():
         "Meta, Michigan State University, University of Washington, "
         "University of Illinois Urbana-Champaign"
     )
-    assert readme.index(f'src="{source}"') < readme.index("# MemoProAgent")
+    banner_position = readme.index(f'src="{source}"')
+    assert readme.count("# MemoProAgent<br>") == 1
+    assert readme.index("[Citation](#citation)") < banner_position
+    assert banner_position < readme.index('src="assets/paper/introduction.png"')
     logos = []
     for name in ("meta", "msu", "uw", "uiuc"):
         with Image.open(ROOT / f"assets/affiliations/{name}.png") as image:
